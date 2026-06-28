@@ -137,6 +137,9 @@ if (!isset($pathToRoot)) {
                 <li class="<?php echo strpos($_SERVER['PHP_SELF'], 'solicitudes.php') !== false ? 'active' : ''; ?>">
                     <a href="<?php echo $pathToRoot; ?>usuarios/solicitudes.php"><i class="fas fa-key me-2"></i> Solicitudes</a>
                 </li>
+                <li class="<?php echo basename($_SERVER['PHP_SELF']) == 'importar_ui.php' ? 'active' : ''; ?>">
+                    <a href="<?php echo $pathToRoot; ?>importar_ui.php"><i class="fas fa-upload me-2"></i> Importar Clientes</a>
+                </li>
                 <?php endif; ?>
                 <li class="<?php echo strpos($_SERVER['PHP_SELF'], 'perfil.php') !== false ? 'active' : ''; ?>">
                     <a href="<?php echo $pathToRoot; ?>usuarios/perfil.php"><i class="fas fa-user-cog me-2"></i> Mi Perfil</a>
