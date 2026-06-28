@@ -149,7 +149,12 @@ include '../header.php';
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">NIC <span class="text-danger">*</span></label>
-                            <input type="text" name="nic" id="nic" class="form-control" required>
+                            <div class="input-group">
+                                <input type="text" name="nic" id="nic" class="form-control" placeholder="Ingrese NIC" required>
+                                <button class="btn btn-outline-primary" type="button" id="btnBuscarNic" title="Buscar información">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Localidad <span class="text-danger">*</span></label>
@@ -454,9 +459,13 @@ $(document).ready(function() {
     });
 
     // Autocomplete from NIC
-    $('#nic').on('change', function() {
-        var nic = $(this).val();
+    function buscarPorNic() {
+        var nic = $('#nic').val();
         if (nic.length > 0) {
+            var $btn = $('#btnBuscarNic');
+            var originalHtml = $btn.html();
+            $btn.html('<i class="fas fa-spinner fa-spin"></i>').prop('disabled', true);
+
             $.ajax({
                 url: 'buscar_nic.php',
                 type: 'GET',
@@ -470,7 +479,6 @@ $(document).ready(function() {
 
                         // Map Oficina
                         if (d.COD_UNICOM) {
-                            // Find option that contains the code
                             $('#oficina option').each(function() {
                                 if ($(this).val().indexOf(d.COD_UNICOM) !== -1) {
                                     $('#oficina').val($(this).val()).trigger('change');
@@ -490,10 +498,43 @@ $(document).ready(function() {
                             $('#itinerario').val(parseInt(d.ITINERARIO));
                         }
 
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡NIC Encontrado!',
+                            text: 'Se han completado los datos del cliente.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
                         validarFormulario();
+                    } else {
+                        Swal.fire('No encontrado', 'No se encontró información para el NIC ingresado.', 'info');
                     }
+                },
+                error: function() {
+                    Swal.fire('Error', 'Error al consultar el NIC.', 'error');
+                },
+                complete: function() {
+                    $btn.html(originalHtml).prop('disabled', false);
                 }
             });
+        }
+    }
+
+    $('#btnBuscarNic').on('click', buscarPorNic);
+
+    // Also trigger on Enter key inside NIC field
+    $('#nic').on('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            buscarPorNic();
+        }
+    });
+
+    // We keep change event as fallback for those who tab out
+    $('#nic').on('change', function() {
+        if (!$('#localidad').val()) { // Only if not already filled
+            buscarPorNic();
         }
     });
 
