@@ -2,8 +2,11 @@
 /**
  * Script de importación diaria de clientes desde iniforme_semanal.txt
  */
-if (php_sapi_name() !== 'cli' && !isset($_GET['access_token'])) {
-    die("Acceso denegado. Este script solo puede ejecutarse desde CLI o con un token de acceso.");
+$token_valido = "edenorte_import_2024";
+
+if (php_sapi_name() !== 'cli' && (!isset($_GET['access_token']) || $_GET['access_token'] !== $token_valido)) {
+    die("Acceso denegado. Este script solo puede ejecutarse desde CLI o con un token de acceso válido.<br>
+         Uso vía web: <code>importar_clientes.php?access_token=$token_valido</code>");
 }
 
 include 'conexion.php';
