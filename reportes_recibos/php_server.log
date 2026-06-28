@@ -1,0 +1,32 @@
+[Wed May 27 15:41:11 2026] PHP 8.3.6 Development Server (http://localhost:8001) started
+[Wed May 27 15:42:38 2026] [::1]:59570 Accepted
+[Wed May 27 15:42:38 2026] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /app/conexion.php:9
+Stack trace:
+#0 /app/conexion.php(9): mysqli->__construct()
+#1 /app/login.php(3): include('...')
+#2 {main}
+  thrown in /app/conexion.php on line 9
+[Wed May 27 15:42:38 2026] [::1]:59570 [500]: GET /login.php - Uncaught mysqli_sql_exception: No such file or directory in /app/conexion.php:9
+Stack trace:
+#0 /app/conexion.php(9): mysqli->__construct()
+#1 /app/login.php(3): include('...')
+#2 {main}
+  thrown in /app/conexion.php on line 9
+[Wed May 27 15:42:38 2026] [::1]:59570 Closing
+[Wed May 27 15:42:40 2026] [::1]:44920 Accepted
+[Wed May 27 15:42:40 2026] [::1]:44920 [302]: GET /dashboard.php
+[Wed May 27 15:42:40 2026] [::1]:44920 Closing
+[Wed May 27 15:42:40 2026] [::1]:44932 Accepted
+[Wed May 27 15:42:40 2026] PHP Fatal error:  Uncaught mysqli_sql_exception: No such file or directory in /app/conexion.php:9
+Stack trace:
+#0 /app/conexion.php(9): mysqli->__construct()
+#1 /app/login.php(3): include('...')
+#2 {main}
+  thrown in /app/conexion.php on line 9
+[Wed May 27 15:42:40 2026] [::1]:44932 [500]: GET /login.php - Uncaught mysqli_sql_exception: No such file or directory in /app/conexion.php:9
+Stack trace:
+#0 /app/conexion.php(9): mysqli->__construct()
+#1 /app/login.php(3): include('...')
+#2 {main}
+  thrown in /app/conexion.php on line 9
+[Wed May 27 15:42:40 2026] [::1]:44932 Closing
