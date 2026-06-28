@@ -60,11 +60,18 @@ while (($data = fgetcsv($handle, 0, "@")) !== false) {
         $data = array_slice($data, 0, count($columnas));
     }
 
-    if ($stmt->execute($data)) {
-        $insertados++;
-    } else {
+    // Usar bind_param con referencias para máxima compatibilidad o execute($data) si PHP >= 8.1
+    // Por simplicidad y robustez en versiones modernas:
+    try {
+        if ($stmt->execute($data)) {
+            $insertados++;
+        } else {
+            $errores++;
+            echo "Error en fila $fila: " . $stmt->error . "\n";
+        }
+    } catch (Exception $e) {
         $errores++;
-        echo "Error en fila $fila: " . $stmt->error . "\n";
+        echo "Excepción en fila $fila: " . $e->getMessage() . "\n";
     }
 }
 
