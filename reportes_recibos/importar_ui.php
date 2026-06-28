@@ -12,9 +12,23 @@ if ($_SESSION['user_rol'] !== 'ADMINISTRADOR') {
 
 $import_results = null;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["archivo_txt"])) {
-    $file = $_FILES["archivo_txt"]["tmp_name"];
-    if (is_uploaded_file($file)) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_FILES["archivo_txt"])) {
+        $import_results = ["success" => false, "message" => "No se recibieron datos. Es posible que el archivo sea demasiado grande para la configuración del servidor (post_max_size)."];
+    } else if ($_FILES["archivo_txt"]["error"] !== UPLOAD_ERR_OK) {
+        $error_codes = [
+            UPLOAD_ERR_INI_SIZE => 'El archivo excede el tamaño máximo permitido por PHP.',
+            UPLOAD_ERR_FORM_SIZE => 'El archivo excede el tamaño máximo permitido por el formulario.',
+            UPLOAD_ERR_PARTIAL => 'El archivo se subió parcialmente.',
+            UPLOAD_ERR_NO_FILE => 'No se seleccionó ningún archivo.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Falta la carpeta temporal en el servidor.',
+            UPLOAD_ERR_CANT_WRITE => 'Error al escribir el archivo en el disco.',
+            UPLOAD_ERR_EXTENSION => 'Una extensión de PHP detuvo la subida.'
+        ];
+        $msg = $error_codes[$_FILES["archivo_txt"]["error"]] ?? 'Error desconocido en la subida.';
+        $import_results = ["success" => false, "message" => $msg];
+    } else {
+        $file = $_FILES["archivo_txt"]["tmp_name"];
         $handle = fopen($file, "r");
         if ($handle) {
             $conexion->query("TRUNCATE TABLE clientes_info");
@@ -40,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["archivo_txt"])) {
             }
             fclose($handle);
             $import_results = ["success" => true, "inserted" => $insertados, "errors" => $errores];
+        } else {
+            $import_results = ["success" => false, "message" => "No se pudo abrir el archivo temporal."];
         }
     }
 }
@@ -60,14 +76,21 @@ include 'header.php';
                 </div>
 
                 <?php if ($import_results): ?>
-                    <div class="alert alert-<?php echo $import_results['inserted'] > 0 ? 'success' : 'warning'; ?> alert-dismissible fade show" role="alert">
-                        <strong>Proceso finalizado!</strong>
-                        <ul class="mb-0 mt-2">
-                            <li>Registros importados: <?php echo $import_results['inserted']; ?></li>
-                            <li>Errores encontrados: <?php echo $import_results['errors']; ?></li>
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <?php if ($import_results['success']): ?>
+                        <div class="alert alert-<?php echo $import_results['inserted'] > 0 ? 'success' : 'warning'; ?> alert-dismissible fade show" role="alert">
+                            <strong>Proceso finalizado!</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Registros importados: <?php echo $import_results['inserted']; ?></li>
+                                <li>Errores encontrados: <?php echo $import_results['errors']; ?></li>
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error:</strong> <?php echo $import_results['message']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <form method="POST" enctype="multipart/form-data" class="mt-4">
