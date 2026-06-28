@@ -453,6 +453,50 @@ $(document).ready(function() {
         table.draw();
     });
 
+    // Autocomplete from NIC
+    $('#nic').on('change', function() {
+        var nic = $(this).val();
+        if (nic.length > 0) {
+            $.ajax({
+                url: 'buscar_nic.php',
+                type: 'GET',
+                data: { nic: nic },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.success && res.data) {
+                        var d = res.data;
+                        $('#localidad').val(d.LOCALIDAD);
+                        $('#telefono').val(d.TFNO_CLI);
+
+                        // Map Oficina
+                        if (d.COD_UNICOM) {
+                            // Find option that contains the code
+                            $('#oficina option').each(function() {
+                                if ($(this).val().indexOf(d.COD_UNICOM) !== -1) {
+                                    $('#oficina').val($(this).val()).trigger('change');
+                                    return false;
+                                }
+                            });
+                        }
+
+                        // Map Ruta
+                        if (d.RUTA) {
+                            var rutaVal = 'Ruta ' + parseInt(d.RUTA);
+                            $('#ruta').val(rutaVal);
+                        }
+
+                        // Map Itinerario
+                        if (d.ITINERARIO) {
+                            $('#itinerario').val(parseInt(d.ITINERARIO));
+                        }
+
+                        validarFormulario();
+                    }
+                }
+            });
+        }
+    });
+
     // Real-time validation
     function validarFormulario() {
         var form = document.getElementById('formReporte');
