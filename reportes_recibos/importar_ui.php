@@ -128,6 +128,21 @@ include 'header.php';
                     <?php endif; ?>
                 <?php endif; ?>
 
+                <div class="alert alert-dark small mb-4">
+                    <strong><i class="fas fa-terminal me-2"></i> ¿El script de arriba tarda mucho o falla?</strong>
+                    <br>Copia y pega este comando directamente en <strong>phpMyAdmin</strong> (Pestaña SQL) para una carga instantánea:
+                    <pre class="bg-black text-success p-2 mt-2 border rounded" style="font-size: 11px;">
+TRUNCATE TABLE clientes_info;
+
+LOAD DATA LOCAL INFILE '<?php echo str_replace('\\', '/', __DIR__ . DIRECTORY_SEPARATOR); ?>iniforme_semanal.txt'
+INTO TABLE clientes_info
+FIELDS TERMINATED BY '@'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(NIS_RAD, COD_TIPO_CONEXION, TIPO_CONEXION, NIF, NIC, FECHA_ALTA, FECHA_BAJA, FIANZA, CO_AN_VIP, AN_VIP, ESTADO_SUMINISTRO, DESCRIPCION_ESTADO_SUMINISTRO, TARIFA, NOMBRE_CLIENTE, APE1_CLI, APE2_CLI, TFNO_CLI, COD_CLI, DESC_TIPOCLIENTE, COD_CALLE, CALLE, NUM_PUERTA, DUPLICADOR, CGV_SUM, COD_LOCAL, LOCALIDAD, SECCION, MUNICIPIO, PROVINCIA, REF_DIR, ACC_FINCA, NOM_FINCA, COD_UNICOM, COD_AREA, NUM_DEUDA, IMPORTE, NUM_DEUDA_VENC, IMPORTE_VENC, NUM_APA, CO_MARCA, MARCA, F_INST_MED, NUM_PADRON, RUTA, ITINERARIO, TIP_FIN, TIPO_FINCA, TIP_CLI, TIPO_CLIENTE, TIP_TENSION, TIPO_TENSION, TIP_SUMINISTRO, TIPO_SUMINISTRO, FECHA_VENC_UF, CSMO_FIJO, DOC_ID, Subestacion, Circuito, CT, PUNTO_MEDIDA, NATURALEZA, FECHA_UF, ZONA, CENT_LECT, COORDX, COORDY, TABLA, COD_UNICOM_CONT, NUM_FISCAL, TIPO_DOC);
+                    </pre>
+                </div>
+
                 <form method="POST" enctype="multipart/form-data" class="mt-4">
                     <div class="mb-4 p-3 border rounded bg-light">
                         <label class="form-label fw-bold d-block mb-2">Método de Importación</label>
