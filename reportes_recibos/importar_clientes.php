@@ -60,10 +60,7 @@ while (($data = fgetcsv($handle, 0, "@")) !== false) {
         $data = array_slice($data, 0, count($columnas));
     }
 
-    $types = str_repeat("s", count($columnas));
-    $stmt->bind_param($types, ...$data);
-
-    if ($stmt->execute()) {
+    if ($stmt->execute($data)) {
         $insertados++;
     } else {
         $errores++;
