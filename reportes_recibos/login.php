@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_usuario'] = $usuario;
                 $_SESSION['user_rol'] = $user['rol'];
                 $_SESSION['user_oficina'] = $user['oficina_usuario'];
+                $_SESSION['last_activity'] = time(); // Initialize activity tracker
 
                 header("Location: dashboard.php");
                 exit();
@@ -88,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($error): ?>
             <div class="alert alert-danger" role="alert">
                 <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_GET['timeout'])): ?>
+            <div class="alert alert-warning" role="alert">
+                Su sesión ha expirado por inactividad. Por favor, inicie sesión de nuevo.
             </div>
         <?php endif; ?>
         <form action="login.php" method="POST">

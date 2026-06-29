@@ -2,14 +2,24 @@
 session_start();
 
 /**
- * Check if the user is authenticated.
- * If not, redirect to login page.
+ * Check if the user is authenticated and manage session timeout.
+ * If not, or if timed out, redirect to login page.
  */
 function check_auth($pathToRoot = "") {
     if (!isset($_SESSION['user_id'])) {
         header("Location: " . $pathToRoot . "login.php");
         exit();
     }
+
+    // Session timeout logic (30 minutes = 1800 seconds)
+    $timeout_duration = 1800;
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout_duration)) {
+        session_unset();
+        session_destroy();
+        header("Location: " . $pathToRoot . "login.php?timeout=1");
+        exit();
+    }
+    $_SESSION['last_activity'] = time();
 }
 
 /**
