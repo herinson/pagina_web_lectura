@@ -131,7 +131,6 @@ if (isset($_GET['success']) && $_GET['success'] === 'delete_all') {
 
 <?php if (isset($rol_usuario) && $rol_usuario === 'admin'): ?>
 <div class="mb-3">
-    <a href="importar_csv.php" class="btn btn-success">Importar CSV</a>
     <a href="#" id="exportar_excel" class="btn btn-info">Exportar a Excel</a>
     <a href="eliminar_todo.php" class="btn btn-danger" onclick="return confirm('¿Está seguro de que desea eliminar TODOS los registros? Esta acción no se puede deshacer.');">Eliminar Todo</a>
 </div>
